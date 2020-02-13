@@ -1,0 +1,89 @@
+---
+# Removes old docker packages typically included in your distros package manager.
+# Add the docker-ce repo and required packages
+
+# 
+# Install Docker-CE for RHEL/CentOS 7
+#
+- block:
+  - name: "Remove old versions of docker and install required packages"
+    yum:
+      name: "{{ item.name }}"
+      state: "{{ item.state }}"
+    with_items:
+      - "{{ packages_el }}"
+
+  - name: "Add the docker-ce repo for RHEL / CentOS 7"
+    get_url:
+      url: https://download.docker.com/linux/centos/docker-ce.repo
+      dest: /etc/yum.repos.d/docker-ce.repo
+
+  - name: "Install docker-ce"
+    yum:
+      name: "{{ item.name }}"
+      state: "{{ item.state }}"
+    with_items:
+      - "{{ docker_ce_el }}"
+    notify: docker_el_installed
+    
+  when:
+    - ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
+    - ansible_distribution_version >= 7
+
+# 
+# Install Docker-CE for Fedora
+# 
+- block:
+  - name: "Remove old versions of docker and install required packages"
+    dnf:
+      name: "{{ item.name }}"
+      state: "{{ item.state }}"
+    with_items:
+      - "{{ packages_fedora }}"
+
+  - name: "Add the docker-ce repo for Fedora"
+    get_url:
+      url: "https://download.docker.com/linux/{{ ansible_distribution|lower }}/docker-ce.repo"
+      dest: /etc/yum.repos.d/docker-ce.repo
+
+  - name: Install docker-ce
+    dnf:
+      name: "{{ item.name }}"
+      state: "{{ item.state }}"
+    with_items:
+      - "{{ docker_ce_el }}"
+    notify: docker_el_installed
+
+  when: >
+    ansible_distribution == "Fedora"
+
+# 
+# Install Docker-CE for Debian and Ubuntu
+# 
+- block:
+  - name: "Remove old versions of docker and install required packages for Debian and Ubuntu"
+    apt:
+      name: "{{ item.name }}"
+      state: "{{ item.state }}"
+    with_items:
+      - "{{ packages_debian }}"
+
+  - name: "Add docker GPG key for Debian and Ubuntu"
+    apt_key:
+      url: "https://download.docker.com/linux/{{ ansible_distribution|lower }}/gpg"
+      state: present
+      id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+
+  - name: "Install the docker repo for Debian and Ubuntu"
+    apt_repository:
+      repo: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} stable"
+      state: present
+
+  - name: "Docker-CE Install for Debian and Ubuntu"
+    apt:
+      name: "{{ item.name }}"
+      state: "{{ item.state }}"
+    with_items:
+      - "{{ docker_ce_debian }}"
+  when: 
+    - ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"

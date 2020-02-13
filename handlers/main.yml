@@ -1,0 +1,7 @@
+---
+# handlers file for docker
+- name: docker_el_installed
+  service: 
+    name: docker
+    state: started
+    enabled: true

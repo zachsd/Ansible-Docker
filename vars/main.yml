@@ -1,0 +1,100 @@
+---
+# vars file for docker
+# docker_ce packages are the current packages that are compatiable with the current stable version of kubernetes: v1.6
+# To use the lastest docker version avaialbe remove the version number from the name and change the state to latest
+
+docker_ce_el:
+  - name: docker-ce-19.03.4
+    state: present
+  - name: docker-ce-cli-19.03.4
+    state: present
+  - name: containerd.io-1.2.10
+    state: present
+
+docker_ce_debian:
+  - name: containerd.io=1.2.10-3
+    state: present
+  - name: "docker-ce=5:19.03.4~3-0~{{ ansible_distribution|lower }}-{{ ansible_distribution_release }}"
+    state: present
+  # - name: "docker-ce-cli=5:19.03.4~3-0~{{ ansible_distribution|lower }}-{{ ansible_distribution_release }}"
+  #   state: present
+
+packages_el:
+  - name: docker
+    state: absent
+  - name: docker-client
+    state: absent
+  - name: docker-client-latest
+    state: absent
+  - name: docker-common
+    state: absent
+  - name: docker-latest
+    state: absent
+  - name: docker-latest-logrotate
+    state: absent
+  - name: docker-logrotate
+    state: absent
+  - name: docker-engine
+    state: absent
+  - name: yum-utils
+    state: latest
+  - name: device-mapper-persistent-data
+    state: latest
+  - name: lvm2
+    state: latest
+
+packages_fedora:
+  - name: docker
+    state: absent
+  - name: docker-client
+    state: absent
+  - name: docker-client-latest
+    state: absent
+  - name: docker-common
+    state: absent
+  - name: docker-latest
+    state: absent
+  - name: docker-latest-logrotate
+    state: absent
+  - name: docker-logrotate
+    state: absent
+  - name: docker-selinux
+    state: absent
+  - name: docker-engine-selinux
+    state: absent
+  - name: docker-engine
+    state: absent
+  - name: dnf-plugins-core
+    state: latest
+
+packages_debian:
+  - name: docker
+    state: absent
+  - name: docker-engine
+    state: absent
+  - name: docker.io
+    state: absent
+  - name: containerd
+    state: absent
+  - name: runc
+    state: absent
+  - name: apt-transport-https
+    state: latest
+  - name: ca-certificates
+    state: latest
+  - name: curl
+    state: latest
+  - name: gnupg2
+    state: latest
+  - name: software-properties-common
+    state: latest
+  - name: apt-transport-https
+    state: latest
+  - name: ca-certificates
+    state: latest
+  - name: curl
+    state: latest
+  - name: gnupg-agent
+    state: latest
+  - name: software-properties-common
+    state: latest
