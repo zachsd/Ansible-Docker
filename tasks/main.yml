@@ -78,6 +78,13 @@
     apt_repository:
       repo: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} stable"
       state: present
+    when:  ansible_architecture == "x86_64"
+
+  - name: "Install the docker repo for Debian and Ubuntu"
+    apt_repository:
+      repo: "deb [arch=arm64] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} stable"
+      state: present
+    when:  ansible_architecture == "aarch64"
 
   - name: "Docker-CE Install for Debian and Ubuntu"
     apt:
